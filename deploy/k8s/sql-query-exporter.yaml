@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sql-query-exporter
+  labels:
+    app: sql-query-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sql-query-exporter
+  template:
+    metadata:
+      labels:
+        app: sql-query-exporter
+    spec:
+      containers:
+      - name: sql-query-exporter
+        image: ghcr.io/gerrited/sql-query-exporter:latest
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 500m
+            memory: 200M
+          requests:
+            cpu: 200m
+            memory: 100M
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sql-query-exporter
+spec:
+  selector:
+    app: sql-query-exporter
+  ports:
+    - protocol: TCP
+      port: 80
